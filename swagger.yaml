@@ -72,6 +72,7 @@ components:
           description: Client who performed the bet
         status:
           type: string
+          enum: [OPEN, WINNER, LOSER, VOID]
           description: Bet status
         event:
           type: string
