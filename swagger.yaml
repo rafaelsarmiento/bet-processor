@@ -1,0 +1,84 @@
+openapi: 3.0.4
+info:
+  title: Bet Processor
+  description: Service to process different bets
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/bet-processor/api/v1
+tags:
+  - name: bet
+    description: Service to process bets
+paths:
+  /bets:
+    post:
+      tags:
+        - bet
+      summary: It adds a bet to be processed.
+      description: It adds a bet to be processed.
+      operationId: add-bet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BetRequest"
+      responses:
+        '200':
+          description: success
+        '400':
+          description: Invalid input bet
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+        '503':
+          description: Server is overloaded
+  /shutdown:
+    post:
+      tags:
+        - bet
+      summary: It gracefully shutdowns the whole system.
+      description: It gracefully shutdowns the whole system waiting for every processing every bet that was already added.
+      operationId: shutdown
+      responses:
+        '200':
+          description: success
+components:
+  schemas:
+    BetRequest:
+      type: object
+      required:
+        - id
+        - amount
+        - odds
+        - client
+        - status
+      properties:
+        id:
+          type: integer
+          description: Bet ID
+        amount:
+          type: number
+          format: double
+          description: Bet amount
+        odds:
+          type: number
+          format: double
+          description: Bet odds
+        client:
+          type: string
+          description: Client who performed the bet
+        status:
+          type: string
+          description: Bet status
+        event:
+          type: string
+          description: Event being bet on
+        market:
+          type: string
+          description: Market of the event
+        selection:
+          type: string
+          description: Selection associated with the bet
