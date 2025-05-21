@@ -10,6 +10,7 @@ import java.util.function.BiFunction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
 
 import com.sportradar.bet_processor.domain.Bet;
@@ -21,7 +22,7 @@ import com.sportradar.bet_processor.service.BetResultService;
  * 
  */
 @Service
-public class InMemoryBetResultServiceImpl implements BetResultService {
+public class InMemoryBetResultServiceImpl implements BetResultService, DisposableBean {
 	
 	private final Logger log = LoggerFactory.getLogger(InMemoryBetResultServiceImpl.class);
 
@@ -55,6 +56,12 @@ public class InMemoryBetResultServiceImpl implements BetResultService {
 	public synchronized String getSummary() {
 		return new Summary(betResultByClients).toString();
 	}
+
+	@Override
+	public void destroy() throws Exception {
+		log.info(getSummary());
+	}
+	
 	
 	private static class ClientBetResult {
 		final int numBets;
@@ -136,5 +143,4 @@ public class InMemoryBetResultServiceImpl implements BetResultService {
 		}
 		
 	}
-
 }

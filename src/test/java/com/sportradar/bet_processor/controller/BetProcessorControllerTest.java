@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 
+import java.time.Duration;
 import java.util.concurrent.RejectedExecutionException;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -27,8 +29,14 @@ public class BetProcessorControllerTest {
 	@Autowired
 	private MockMvcTester mvc;
 	
+	@Autowired
+	private BetProcessorController betProcessorController;
+	
 	@MockitoBean
 	private BetProcessorAccumService betProcessorAccumService;
+	
+	@MockitoBean
+	private ApplicationContext applicationContext;
 	
 	@Test
 	public void addBet_wrongBet_return400() {
@@ -57,6 +65,19 @@ public class BetProcessorControllerTest {
 	}
 	
 	@Test
+	public void addBet_genericError_return500() {
+	
+		doThrow(new NullPointerException()).when(betProcessorAccumService).addBet(Mockito.any());
+		
+		assertThat(mvc.post()
+				.uri(BETS_URI)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(BODY)
+				.exchange())
+			.hasStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@Test
 	public void addBet_rightBet_return200() {
 	
 		doNothing().when(betProcessorAccumService).addBet(Mockito.any());
@@ -70,25 +91,17 @@ public class BetProcessorControllerTest {
 	}
 	
 	@Test
-	public void shutdown_alreadyShutdown_return400() {
-	
-		doThrow(new IllegalArgumentException()).when(betProcessorAccumService).shutdown();
-		
-		assertThat(mvc.post()
-				.uri(SHUTDOWN_URI)
-				.exchange())
-			.hasStatus(HttpStatus.BAD_REQUEST);
-	}
-	
-	@Test
-	public void shutdown_allRight_return200() {
+	public void shutdown_allRight_return200() throws InterruptedException {
 	
 		doNothing().when(betProcessorAccumService).shutdown();
 		
+		betProcessorController.setApplicationContext(applicationContext);
 		assertThat(mvc.post()
 				.uri(SHUTDOWN_URI)
 				.exchange())
 			.hasStatus(HttpStatus.OK);
+		
+		Thread.sleep(Duration.ofSeconds(5));
 	}
 
 }

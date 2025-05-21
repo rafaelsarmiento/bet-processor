@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 
-import org.springframework.beans.BeansException;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import com.sportradar.bet_processor.domain.Bet;
@@ -20,12 +16,11 @@ import com.sportradar.bet_processor.service.BetResultService;
  *
  */
 @Service
-public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessorAccumService, ApplicationContextAware {
+public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessorAccumService {
 	
 	private final BetProcessorService betProcessorService;	
 	private final BetResultService betResultService;
 	private boolean shuttingDown;
-	private ApplicationContext applicationContext;
 
 	public MultipleWorkersBetProcessorAccumServiceImpl(BetProcessorService betProcessorService, BetResultService betResultService) {
 		this.betProcessorService = betProcessorService;
@@ -46,17 +41,7 @@ public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessor
 
 	@Override
 	public void shutdown() {
-		if (!this.shuttingDown && applicationContext != null) {
-			this.shuttingDown = true;
-			SpringApplication.exit(applicationContext);
-		} else {
-			throw new IllegalArgumentException("The system is starting-up yet or shutting-down already");
-		}
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
+		this.shuttingDown = true;
 	}
 
 	private static void validate(Bet bet) {

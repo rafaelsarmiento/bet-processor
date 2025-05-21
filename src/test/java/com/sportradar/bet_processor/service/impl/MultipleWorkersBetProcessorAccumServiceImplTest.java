@@ -14,7 +14,6 @@ import java.util.concurrent.RejectedExecutionException;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 
 import com.sportradar.bet_processor.domain.Bet;
 import com.sportradar.bet_processor.domain.BetStatus;
@@ -210,7 +209,6 @@ public class MultipleWorkersBetProcessorAccumServiceImplTest {
 		Bet bet = createBet();
 		
 		var betProcessor = new MultipleWorkersBetProcessorAccumServiceImpl(betProcessorService, betResultService);
-		betProcessor.setApplicationContext(mock(ApplicationContext.class));
 	 	betProcessor.shutdown();
 	 	
 	 	assertThatThrownBy(() -> betProcessor.addBet(bet))
@@ -219,37 +217,6 @@ public class MultipleWorkersBetProcessorAccumServiceImplTest {
 	 	verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
 	 	verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
 	}	
-
-	
-	@Test
-	public void shutdown_whenAppIsStartingUp_throwsIllegalArgumentException() {
-		
-		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
-	 		 	
-	 	assertThatThrownBy(() -> betProcessor.shutdown())
- 			.isInstanceOf(IllegalArgumentException.class);
-	}	
-
-	
-	@Test
-	public void shutdown_twoCalls_throwsIllegalArgumentException() {
-		
-		var betProcessor = new MultipleWorkersBetProcessorAccumServiceImpl(betProcessorService, betResultService);
-		betProcessor.setApplicationContext(mock(ApplicationContext.class));
-	 	betProcessor.shutdown();	 	
-		
-	 	assertThatThrownBy(() -> betProcessor.shutdown())
- 			.isInstanceOf(IllegalArgumentException.class);
-	}	
-
-	
-	@Test
-	public void shutdown() {
-		
-		var betProcessor = new MultipleWorkersBetProcessorAccumServiceImpl(betProcessorService, betResultService);
-		betProcessor.setApplicationContext(mock(ApplicationContext.class));
-	 	betProcessor.shutdown();	 	
-	}
 	
 	
 	private BetProcessorAccumService createBetProcessorAccumService() {

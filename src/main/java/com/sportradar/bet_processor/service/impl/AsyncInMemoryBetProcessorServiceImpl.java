@@ -96,10 +96,10 @@ public class AsyncInMemoryBetProcessorServiceImpl implements BetProcessorService
 	}
 	
 	private static String buildReason(RegisteredBetStatus registeredBetStatusIn, RegisteredBetStatus registeredBetStatusOut) {
-		return new StringBuilder("Reason: StatusIn [")
-				.append(registeredBetStatusIn.betStatus())
-				.append("] , StatusOut[")
+		return new StringBuilder("Reason: CurrentStatus [")
 				.append(registeredBetStatusOut == null ? "null" : registeredBetStatusOut.betStatus())
+				.append("] , NewStatus[")
+				.append(registeredBetStatusIn.betStatus())				
 				.append("]")
 				.toString();
 	}

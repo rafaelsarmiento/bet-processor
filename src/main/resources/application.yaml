@@ -14,4 +14,4 @@ spring:
 
 bet-processor:
   processor:
-    sleeping-time: 50ms
+    sleeping-time: 10s
