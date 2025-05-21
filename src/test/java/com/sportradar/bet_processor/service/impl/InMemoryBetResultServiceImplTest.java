@@ -99,9 +99,7 @@ public class InMemoryBetResultServiceImplTest {
 		Assertions.assertTrue(summary.contains(CLIENT + "=1.000000"));
 		Assertions.assertTrue(summary.contains(client2 + "=450.246"));
 	}
-	
-
-	
+		
 	@Test
 	public void processBetResult_moreThan5Clients_returnClientsData() {
 		
@@ -142,6 +140,11 @@ public class InMemoryBetResultServiceImplTest {
 		Assertions.assertTrue(summary.contains("Highest losers = [testClient5=-400.2, testClient6=-10, testClient3=-6.877, testClient=0.088123, testClient4=0.911877]"));
 	}
 	
+	@Test
+	public void destroy() throws Exception {
+		InMemoryBetResultServiceImpl betResultService = new InMemoryBetResultServiceImpl();
+		betResultService.destroy();
+	}
 	
 	private BetResultService createBetResultService() {
 		return new InMemoryBetResultServiceImpl();
