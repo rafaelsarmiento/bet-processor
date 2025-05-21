@@ -228,6 +228,27 @@ public class MultipleWorkersBetProcessorAccumServiceImplTest {
 	 		 	
 	 	assertThatThrownBy(() -> betProcessor.shutdown())
  			.isInstanceOf(IllegalArgumentException.class);
+	}	
+
+	
+	@Test
+	public void shutdown_twoCalls_throwsIllegalArgumentException() {
+		
+		var betProcessor = new MultipleWorkersBetProcessorAccumServiceImpl(betProcessorService, betResultService);
+		betProcessor.setApplicationContext(mock(ApplicationContext.class));
+	 	betProcessor.shutdown();	 	
+		
+	 	assertThatThrownBy(() -> betProcessor.shutdown())
+ 			.isInstanceOf(IllegalArgumentException.class);
+	}	
+
+	
+	@Test
+	public void shutdown() {
+		
+		var betProcessor = new MultipleWorkersBetProcessorAccumServiceImpl(betProcessorService, betResultService);
+		betProcessor.setApplicationContext(mock(ApplicationContext.class));
+	 	betProcessor.shutdown();	 	
 	}
 	
 	

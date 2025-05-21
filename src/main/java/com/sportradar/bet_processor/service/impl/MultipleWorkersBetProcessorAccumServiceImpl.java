@@ -46,7 +46,7 @@ public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessor
 
 	@Override
 	public void shutdown() {
-		if (applicationContext != null) {
+		if (!this.shuttingDown && applicationContext != null) {
 			this.shuttingDown = true;
 			SpringApplication.exit(applicationContext);
 		} else {
