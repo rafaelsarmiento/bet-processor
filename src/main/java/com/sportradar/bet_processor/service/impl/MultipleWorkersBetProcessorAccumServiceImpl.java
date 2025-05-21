@@ -1,5 +1,6 @@
 package com.sportradar.bet_processor.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -40,12 +41,7 @@ public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessor
 		
 		validate(bet);
 		
-		betProcessorService.processBet(bet)
-			.exceptionally(exception -> {
-				betResultService.processException(bet, exception);
-				return Optional.empty();
-			})
-			.thenAccept(resultOp -> resultOp.ifPresent(result -> betResultService.processBetResult(bet, result)));
+		processBet(bet);		
 	}
 
 	@Override
@@ -63,13 +59,32 @@ public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessor
 		this.applicationContext = applicationContext;
 	}
 
-	private void validate(Bet bet) {
+	private static void validate(Bet bet) {
 		if (bet == null) {
 			throw new IllegalArgumentException("Bet is null");
 		} else if (bet.client() == null || "".equals(bet.client().trim())) {
 			throw new IllegalArgumentException("Client is null or empty");
 		} else if (bet.status() == null) {
 			throw new IllegalArgumentException("Status is null");
+		} else if (bet.amount() <= 0) {
+			throw new IllegalArgumentException("Amount is equal or lower than zero");
+		} else if (bet.odds() <= 0 || bet.odds() >= 1) {
+			throw new IllegalArgumentException("Odds are equal or lower than zero or greater or equal than 1");
 		}
+	}
+	
+	private void processBet(Bet bet) {
+		betProcessorService.processBet(bet)
+			.exceptionally(exception -> handleProcessingException(bet, exception))
+			.thenAccept(resultOp -> handleProcessingResult(bet, resultOp));
+	}
+	
+	private Optional<BigDecimal> handleProcessingException(Bet bet, Throwable exception) {
+		betResultService.processException(bet, exception);
+		return Optional.empty();
+	}
+	
+	private void handleProcessingResult(Bet bet, Optional<BigDecimal> resultOp) {
+		resultOp.ifPresent(result -> betResultService.processBetResult(bet, result));
 	}
 }

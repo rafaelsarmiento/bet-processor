@@ -10,8 +10,13 @@ asdasd
 asdasd
 
 #### Design decisions
-* New column in the  _PRICES_  database table,  _ID_ , used like primary key. After reading carefully the specification is not clear for me if the  _PRICE_LIST_  can be used as primary key.
+* Use of the Spring built-in task executor to take advantage of the easy configuration, the queueing and the gracefully shutdown.
+* It is not clear to me in the specification how the procession waiting time should be applied. I will apply it at the beginning of the processing.
+* A restriction has been added to not allow bets with an amount of 0 or lower than 0.
+* A restriction has been added to not allow bets with odds of 0 or lower than 0.
+* A restriction has been added to not allow bets with odds of 1 or greater than 1.
+* No validation has been added regarding checking the values for a bet when it is open and these values when it is closed. Simply the bet values when it is being closed are being used.
 
 
 #### Potential improvements
-* When the API is called with wrong input data, not numeric brand or product ID or a wrong data formatting, the API response could be considered like not human user readable.
+

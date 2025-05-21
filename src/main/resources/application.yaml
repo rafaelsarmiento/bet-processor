@@ -11,3 +11,7 @@ spring:
       shutdown:
         await-termination: true
         await-termination-period: 5m # It is a max time, if every async tasks is resolved before, it is not used
+
+bet-processor:
+  processor:
+    sleeping-time: 50ms

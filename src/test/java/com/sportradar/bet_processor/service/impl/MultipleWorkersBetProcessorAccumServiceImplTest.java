@@ -24,9 +24,6 @@ import com.sportradar.bet_processor.service.BetResultService;
 
 public class MultipleWorkersBetProcessorAccumServiceImplTest {
 
-	private static final int ID = 123;
-	private static final double AMOUNT = 12.45;
-	private static final double ODDS = 0.3;
 	private static final String CLIENT = "testClient";
 	private static final BetStatus STATUS = BetStatus.OPEN;
 	
@@ -75,6 +72,78 @@ public class MultipleWorkersBetProcessorAccumServiceImplTest {
 		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
 		
 		assertThatThrownBy(() -> betProcessor.addBet(createBet(CLIENT, null)))
+			.isInstanceOf(IllegalArgumentException.class);
+		verify(betProcessorService, never()).processBet(Mockito.any());
+		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
+		verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void addBet_amountEqualZero_throwValidationException() {
+		
+		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
+		
+		assertThatThrownBy(() -> betProcessor.addBet(createBet(0, 0.3)))
+			.isInstanceOf(IllegalArgumentException.class);
+		verify(betProcessorService, never()).processBet(Mockito.any());
+		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
+		verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void addBet_amountLowerThanZero_throwValidationException() {
+		
+		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
+		
+		assertThatThrownBy(() -> betProcessor.addBet(createBet(-0.0000001, 0.3)))
+			.isInstanceOf(IllegalArgumentException.class);
+		verify(betProcessorService, never()).processBet(Mockito.any());
+		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
+		verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void addBet_oddsEqualZero_throwValidationException() {
+		
+		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
+		
+		assertThatThrownBy(() -> betProcessor.addBet(createBet(10, 0)))
+			.isInstanceOf(IllegalArgumentException.class);
+		verify(betProcessorService, never()).processBet(Mockito.any());
+		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
+		verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void addBet_oddsLowerThanZero_throwValidationException() {
+		
+		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
+		
+		assertThatThrownBy(() -> betProcessor.addBet(createBet(10, -0.001)))
+			.isInstanceOf(IllegalArgumentException.class);
+		verify(betProcessorService, never()).processBet(Mockito.any());
+		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
+		verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void addBet_oddsEqualOne_throwValidationException() {
+		
+		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
+		
+		assertThatThrownBy(() -> betProcessor.addBet(createBet(10, 1)))
+			.isInstanceOf(IllegalArgumentException.class);
+		verify(betProcessorService, never()).processBet(Mockito.any());
+		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
+		verify(betResultService, never()).processException(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void addBet_oddsGreaterThanOne_throwValidationException() {
+		
+		BetProcessorAccumService betProcessor = createBetProcessorAccumService();
+		
+		assertThatThrownBy(() -> betProcessor.addBet(createBet(10, 1.00001)))
 			.isInstanceOf(IllegalArgumentException.class);
 		verify(betProcessorService, never()).processBet(Mockito.any());
 		verify(betResultService, never()).processBetResult(Mockito.any(), Mockito.any());
@@ -170,8 +239,12 @@ public class MultipleWorkersBetProcessorAccumServiceImplTest {
 		return createBet(CLIENT, STATUS);
 	}
 	
+	private static Bet createBet(double amount, double odds) {
+		return new Bet(123, amount, odds, CLIENT, null, null, null, STATUS);
+	}
+	
 	private static Bet createBet(String client, BetStatus status) {
-		return new Bet(ID, AMOUNT, ODDS, client, null, null, null, status);
+		return new Bet(123, 12.45, 0.3, client, null, null, null, status);
 	}
 	
 }
