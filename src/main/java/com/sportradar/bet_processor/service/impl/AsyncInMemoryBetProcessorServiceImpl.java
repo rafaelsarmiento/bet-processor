@@ -41,6 +41,7 @@ public class AsyncInMemoryBetProcessorServiceImpl implements BetProcessorService
 	@Async
 	@Override
 	public CompletableFuture<Optional<BigDecimal>> processBet(Bet bet) {
+		log.debug("Processing bet [{}] with status [{}]", bet.id(), bet.status());
 		sleep();		
 		var exceptionOp = checkUpdateStatus(bet);
 		if (exceptionOp.isEmpty()) {

@@ -6,7 +6,7 @@ spring:
       pool:
         core-size: 6
         max-size: 6
-        queue-capacity: 8
+        queue-capacity: 1000
       thread-name-prefix: BetWorker-
       shutdown:
         await-termination: true
@@ -14,4 +14,8 @@ spring:
 
 bet-processor:
   processor:
-    sleeping-time: 10s
+    sleeping-time: 50ms
+
+logging:
+  level:
+    com.sportradar.bet_processor.service.impl: DEBUG

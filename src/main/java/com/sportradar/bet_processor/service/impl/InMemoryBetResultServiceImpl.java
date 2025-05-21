@@ -49,7 +49,7 @@ public class InMemoryBetResultServiceImpl implements BetResultService, Disposabl
 
 	@Override
 	public void processException(Bet bet, Throwable exception) {
-		log.error("Error processing bet with id [{}] because of [{}]", bet.id(), exception.getMessage());
+		log.info("Error processing bet with id [{}] because of [{}]", bet.id(), exception.getMessage());
 	}
 
 	@Override
