@@ -22,7 +22,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		BetProcessorService betProcessor = createBetProcessorService();
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.WINNER));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -35,7 +35,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.OPEN))
 				.thenCompose(dummy -> betProcessor.processBet(createBet(id + 1, BetStatus.WINNER)));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -47,7 +47,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		BetProcessorService betProcessor = createBetProcessorService();
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.LOSER));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -59,7 +59,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		BetProcessorService betProcessor = createBetProcessorService();
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.VOID));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -82,7 +82,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.OPEN))
 			.thenCompose(dummy -> betProcessor.processBet(createBet(id, BetStatus.OPEN)));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -95,7 +95,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.VOID))
 			.thenCompose(dummy -> betProcessor.processBet(createBet(id, BetStatus.OPEN)));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -108,7 +108,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.VOID))
 			.thenCompose(dummy -> betProcessor.processBet(createBet(id, BetStatus.WINNER)));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}
@@ -121,7 +121,7 @@ public class AsyncInMemoryBetProcessorServiceImplTest {
 		var betResult = betProcessor.processBet(createBet(id, BetStatus.VOID))
 			.thenCompose(dummy -> betProcessor.processBet(createBet(id, BetStatus.VOID)));
 		
-		assertThatThrownBy(() -> betResult.join())
+		assertThatThrownBy(betResult::join)
 			.cause()
 			.isInstanceOf(IllegalArgumentException.class);
 	}

@@ -35,7 +35,7 @@ public class AsyncInMemoryBetProcessorServiceImpl implements BetProcessorService
 	
 	public AsyncInMemoryBetProcessorServiceImpl(@Value("${bet-processor.processor.sleeping-time}") Duration sleepingDuration) {
 		this.sleepingDuration = sleepingDuration;
-		betStatusRegister = new ConcurrentHashMap<>();
+		betStatusRegister = new ConcurrentHashMap<>(50);
 	}
 	
 	@Async
