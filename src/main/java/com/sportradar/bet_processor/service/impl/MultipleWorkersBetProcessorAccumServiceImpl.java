@@ -50,7 +50,7 @@ public class MultipleWorkersBetProcessorAccumServiceImpl implements BetProcessor
 			this.shuttingDown = true;
 			SpringApplication.exit(applicationContext);
 		} else {
-			throw new IllegalArgumentException("The system is starting-up yet");
+			throw new IllegalArgumentException("The system is starting-up yet or shutting-down already");
 		}
 	}
 

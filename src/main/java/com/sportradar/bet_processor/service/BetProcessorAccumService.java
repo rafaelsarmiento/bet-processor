@@ -16,7 +16,7 @@ public interface BetProcessorAccumService {
 	/**
 	 * It gracefully shutdowns the whole bet processor system.
 	 * 
-	 * @throws IllegalArgumentException in case a shutdown is not possible because the system is starting up yet
+	 * @throws IllegalArgumentException in case a shutdown is not possible because the system is starting up yet or shutting-down already
 	 */
 	void shutdown();
 }

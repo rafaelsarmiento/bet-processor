@@ -45,6 +45,12 @@ paths:
       responses:
         '200':
           description: success
+        '400':
+          description: Invalid input bet
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     BetRequest:
